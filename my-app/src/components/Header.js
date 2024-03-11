@@ -80,7 +80,7 @@ const Header = ({city1, city2, city3}) => {
                 type="text"
                 name="city"
                 required/>                
-            <button type="submit">Submit</button>
+            <button type="submit">+</button>
             </form>
             </div>
 
