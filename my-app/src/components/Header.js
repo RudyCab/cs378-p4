@@ -1,33 +1,102 @@
 import React, {useState, useEffect} from 'react';
-import Api from './Api';
-
 
 const Header = ({city1, city2, city3}) => {
     const [imageSrc, setImageSrc] = useState(`${process.env.PUBLIC_URL}/images/austin.jpg`);
+    var latitude = 0;
+    var longitude = 1; 
+    const [temperature, setTemperature] = useState([]);
+    const [time, setTime] = useState([]);
 
-    const handleButtonClick = (image, city) => {
+
+    const handleButtonClick = (image) => {
         setImageSrc(`${process.env.PUBLIC_URL}/${image}`);
-        <Api city="city"/>
 
     };
+
+    const getCoord = (city) => {
+        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`)
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            latitude = data.results[0].latitude;
+            longitude = data.results[0].longitude;
+            getWeather(latitude, longitude)
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    const getWeather = async (latitude, longitude) => {
+        try {
+            console.error('latitude', latitude);
+            console.error('longtitude', longitude);
+
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.error('what is data now', data);
+
+            
+            const nextFiveHoursData = data.hourly.time.slice(0, 5).map((time, index) => ({
+                time: new Date(time),
+                temperature: data.hourly.temperature_2m[index]
+            }));
+            setTime(nextFiveHoursData.map(entry => entry.time));
+            setTemperature(nextFiveHoursData.map(entry => entry.temperature));        
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+        }
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const cityName = event.target.elements.city.value; 
+        getCoord(cityName); 
+    };
+    
 
     return (
         <div className="container" style={{ backgroundImage: `url(${imageSrc})` }}>
             <img class="logo" src={`${process.env.PUBLIC_URL}/logo.png`} alt='menu logo'/>
             <div className="buttons-container">
-                <button class="city1" onClick={()=> { handleButtonClick('images/austin.jpg', 'austin')}}type="button">{city1}</button>
-                <button class="city2" onClick={()=> { handleButtonClick('images/dallas.jpg', 'dallas')}}type="button">{city2}</button>
-                <button class="city3" onClick={()=> { handleButtonClick('images/houston.jpg', 'houston')}}type="button">{city3}</button>
+                <button class="city1" onClick={()=> { handleButtonClick('images/austin.jpg'); getCoord('Austin')}}type="button">{city1}</button>
+                <button class="city2" onClick={()=> { handleButtonClick('images/dallas.jpg'); getCoord('Dallas')}}type="button">{city2}</button>
+                <button class="city3" onClick={()=> { handleButtonClick('images/houston.jpg'); getCoord('Houston')}}type="button">{city3}</button>
             </div>
             <div>
             </div>
 
             <div className='search-container'>
-            <form>
-                <input type="city" name="City"required></input>
-                <button type="submit">Submit</button>
+            <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                name="city"
+                required/>                
+            <button type="submit">Submit</button>
             </form>
             </div>
+
+            <div class="current">
+            <h2>Current Weather</h2>    
+            <h1>Temperature: {temperature && temperature.length > 0 ? temperature[0] : '-'}</h1>
+            </div>
+        <div class="weather">
+            <h2>Upcoming Weather</h2>
+            <div class="section">
+                <ul>
+                    {time && temperature && time.length > 0 && temperature.length > 0 && time.slice(1, 4).map((t, index) => (
+                        <li key={index}>{t.toString()} {temperature[index + 1]}</li>
+                    ))}
+                </ul>
+            </div>
+        </div>
         </div>
     );
 };

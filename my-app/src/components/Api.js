@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Api = ({city}) => {
     const [data, setData] = useState(null);
 
-
+    console.log('Inside api code')
 
     useEffect(() => {
         // Fetch data from the API
@@ -22,7 +22,8 @@ const Api = ({city}) => {
 
     return (
         <div>
-            <button class="city1" onClick={()=> {}}type="button">{'IMMMM HEREEEE'}</button>
+            
+            <button class="apiButton" onClick={()=> {}}type="button">{'IMMMM HEREEEE'}</button>
         </div>
     );
 };
