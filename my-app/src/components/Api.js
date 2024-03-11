@@ -22,7 +22,7 @@ const Api = ({city}) => {
 
     return (
         <div>
-            <h6>{city}</h6>
+            <button class="city1" onClick={()=> {}}type="button">{'IMMMM HEREEEE'}</button>
         </div>
     );
 };
