@@ -1,15 +1,18 @@
+Body {
+  color: cadetblue;
+}
+
 .logo {
   display: block;
   width: 35%;
-
   color: white;
 }
 
 .buttons-and-search-container {
   display: flex;
-  align-items: center; /* Align items vertically */
-  justify-content: space-between; /* Space elements evenly */
-  padding: 10px; /* Add padding for spacing */
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 10px; 
 }
 
 .buttons-container {
@@ -19,12 +22,11 @@
 
 .search-container {
   display: flex;
-  align-items: center; /* Align items vertically */
+  align-items: center; 
 }
 
-/* Adjust spacing between elements */
 form {
-  margin-right: 10px; /* Add margin between form and buttons */
+  margin-right: 10px; 
 }
 
 .container {
@@ -36,33 +38,46 @@ form {
 
 .weather {
   max-width: 200px;
-  margin: 50px auto 0; /* Add 20px margin to the top */
+  margin: 50px auto 0; 
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #f0f8ff; /* Light blue */
+  background-color: #f0f8ff;
   text-align: center;
 }
 
 .section {
   margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid #0000cd; /* Dark blue */
+  border: 1px solid #0000cd; 
   border-radius: 5px;
-  background-color: #add8e6; /* Light blue */
+  background-color: #add8e6; 
 }
 
 h2, h3, p, ul, li {
-  font-size: 14px; /* Adjust the font size as needed */
-  margin: 5px 0; /* Add some spacing between elements */
+  font-size: 14px; 
+  margin: 5px 0; 
 }
 
 .current {
   max-width: wrap;
-  margin: 20px auto 0; /* Add 20px margin to the top */
-  padding: 5px; /* Add padding to shift content down */
+  margin: 20px auto 0; 
+  padding: 5px; 
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #f0f8ff; /* Light blue */
+  background-color: #f0f8ff; 
   text-align: center;
+}
+
+.weather-list {
+  width: 100%; 
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.weather-list li {
+  width: 100%;
+  padding: 5px;
 }

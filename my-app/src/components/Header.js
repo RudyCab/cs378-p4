@@ -1,21 +1,22 @@
 import React, {useState, useEffect} from 'react';
 
 const Header = ({city1, city2, city3}) => {
-    const [imageSrc, setImageSrc] = useState(`${process.env.PUBLIC_URL}/images/austin.jpg`);
     var latitude = 0;
     var longitude = 1; 
     const [temperature, setTemperature] = useState([]);
     const [time, setTime] = useState([]);
+    const [city, setCity] = useState('Austin');
 
 
-    const handleButtonClick = (image) => {
-        setImageSrc(`${process.env.PUBLIC_URL}/${image}`);
+    useEffect(() => {
+        getCoord('Austin');
+    }, []); 
 
-    };
 
     const getCoord = (city) => {
         fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`)
         .then(response => {
+            setCity(city)
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
@@ -44,7 +45,7 @@ const Header = ({city1, city2, city3}) => {
             console.error('what is data now', data);
 
             
-            const nextFiveHoursData = data.hourly.time.slice(0, 5).map((time, index) => ({
+            const nextFiveHoursData = data.hourly.time.slice(0, 11).map((time, index) => ({
                 time: new Date(time),
                 temperature: data.hourly.temperature_2m[index]
             }));
@@ -63,12 +64,12 @@ const Header = ({city1, city2, city3}) => {
     
 
     return (
-        <div className="container" style={{ backgroundImage: `url(${imageSrc})` }}>
+        <div className="container" style={{ }}>
             <img class="logo" src={`${process.env.PUBLIC_URL}/logo.png`} alt='menu logo'/>
             <div className="buttons-container">
-                <button class="city1" onClick={()=> { handleButtonClick('images/austin.jpg'); getCoord('Austin')}}type="button">{city1}</button>
-                <button class="city2" onClick={()=> { handleButtonClick('images/dallas.jpg'); getCoord('Dallas')}}type="button">{city2}</button>
-                <button class="city3" onClick={()=> { handleButtonClick('images/houston.jpg'); getCoord('Houston')}}type="button">{city3}</button>
+                <button class="city1" onClick={()=> { getCoord('Austin'); setCity('Austin')}}type="button">{city1}</button>
+                <button class="city2" onClick={()=> {  getCoord('Dallas'); setCity('Dallas')}}type="button">{city2}</button>
+                <button class="city3" onClick={()=> {  getCoord('Houston'); setCity('Houston')}}type="button">{city3}</button>
             </div>
             <div>
             </div>
@@ -84,19 +85,20 @@ const Header = ({city1, city2, city3}) => {
             </div>
 
             <div class="current">
+            <h1>{city}</h1>
             <h2>Current Weather</h2>    
-            <h1>Temperature: {temperature && temperature.length > 0 ? temperature[0] : '-'}</h1>
+            <h1>Temperature: {temperature && temperature.length > 0 ? temperature[0] : '-' }</h1>
             </div>
-        <div class="weather">
-            <h2>Upcoming Weather</h2>
-            <div class="section">
-                <ul>
-                    {time && temperature && time.length > 0 && temperature.length > 0 && time.slice(1, 4).map((t, index) => (
-                        <li key={index}>{t.toString()} {temperature[index + 1]}</li>
-                    ))}
-                </ul>
+            <div className="weather">
+                <h2>Upcoming Weather</h2>
+                <div className="section">
+                    <ul className="weather-list">
+                        {time && temperature && time.length > 0 && temperature.length > 0 && time.slice(0, 10).map((t, index) => (
+                            <li key={index}>{t.toString()} {temperature[index + 1]}</li>
+                        ))}
+                    </ul>
+                </div>
             </div>
-        </div>
         </div>
     );
 };
