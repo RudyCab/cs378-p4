@@ -6,6 +6,8 @@ const Header = ({city1, city2, city3}) => {
     const [temperature, setTemperature] = useState([]);
     const [time, setTime] = useState([]);
     const [city, setCity] = useState('Austin');
+    const [allCities, addCity] = useState(['Austin', 'Dallas', 'Houston']);
+
 
 
     useEffect(() => {
@@ -26,6 +28,9 @@ const Header = ({city1, city2, city3}) => {
             latitude = data.results[0].latitude;
             longitude = data.results[0].longitude;
             getWeather(latitude, longitude)
+            if (!allCities.includes(city)) {
+                addCity(prevCities => [...prevCities, city]);
+            }
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -67,9 +72,9 @@ const Header = ({city1, city2, city3}) => {
         <div className="container" style={{ }}>
             <img class="logo" src={`${process.env.PUBLIC_URL}/logo.png`} alt='menu logo'/>
             <div className="buttons-container">
-                <button class="city1" onClick={()=> { getCoord('Austin'); setCity('Austin')}}type="button">{city1}</button>
-                <button class="city2" onClick={()=> {  getCoord('Dallas'); setCity('Dallas')}}type="button">{city2}</button>
-                <button class="city3" onClick={()=> {  getCoord('Houston'); setCity('Houston')}}type="button">{city3}</button>
+                {allCities.map((name, index) => (
+                    <button key={index} onClick={() => getCoord(name)} type="button">{name}</button>
+                ))}
             </div>
             <div>
             </div>
