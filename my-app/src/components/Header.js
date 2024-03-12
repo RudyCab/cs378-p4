@@ -18,10 +18,9 @@ const Header = ({city1, city2, city3}) => {
     const getCoord = (city) => {
         fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`)
         .then(response => {
-            setCity(city)
             if (!response.ok) {
-            throw new Error('Network response was not ok');
-            }
+                alert('Invalid City')
+            } 
             return response.json();
         })
         .then(data => {
@@ -31,9 +30,11 @@ const Header = ({city1, city2, city3}) => {
             if (!allCities.includes(city)) {
                 addCity(prevCities => [...prevCities, city]);
             }
+            setCity(city)
+            getWeather(latitude, longitude)
         })
         .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
+            alert('Invalid City')
         });
     }
 
@@ -44,7 +45,7 @@ const Header = ({city1, city2, city3}) => {
 
             const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m`);
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                alert('Invalid City')
             }
             const data = await response.json();
             console.error('what is data now', data);
@@ -57,7 +58,7 @@ const Header = ({city1, city2, city3}) => {
             setTime(nextFiveHoursData.map(entry => entry.time));
             setTemperature(nextFiveHoursData.map(entry => entry.temperature));        
         } catch (error) {
-            console.error('Error fetching weather data:', error);
+            alert('Invalid City')
         }
     };
 
